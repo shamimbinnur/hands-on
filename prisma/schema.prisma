@@ -1,0 +1,175 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(uuid())
+  email         String         @unique
+  password      String
+  name          String
+  profileImage  String?        @default("default-profile.jpg")
+  bio           String?
+  skills        String[]
+  causes        String[]
+  joinedDate    DateTime       @default(now())
+  totalHours    Float          @default(0)
+  totalPoints   Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  organizedEvents     Event[]        @relation("Organizer")
+  attendedEvents      EventAttendee[]
+  helpRequests        HelpRequest[]  @relation("Requestor")
+  helpOffered         HelpHelper[]
+  createdTeams        Team[]         @relation("Creator")
+  teamMemberships     TeamMember[]
+  volunteerLogs       VolunteerLog[]
+  verifications       VolunteerLog[] @relation("Verifier")
+
+  VolunteerLogVerifier VolunteerLogVerifier[] @relation("Verifier")
+}
+
+model Event {
+  id            String         @id @default(uuid())
+  title         String
+  description   String
+  category      String
+  date          DateTime
+  time          String
+  address       String
+  latitude      Float?
+  longitude     Float?
+  maxAttendees  Int            @default(0)
+  imageUrl      String?        @default("default-event.jpg")
+  status        String         @default("active")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  organizerId   String
+  organizer     User           @relation("Organizer", fields: [organizerId], references: [id])
+  attendees     EventAttendee[]
+  teams         TeamEvent[]
+  volunteerLogs VolunteerLog[]
+}
+
+model EventAttendee {
+  id            String         @id @default(uuid())
+  eventId       String
+  userId        String
+  joinedAt      DateTime       @default(now())
+
+  // Relations
+  event         Event          @relation(fields: [eventId], references: [id])
+  user          User           @relation(fields: [userId], references: [id])
+
+  @@unique([eventId, userId])
+}
+
+model HelpRequest {
+  id            String         @id @default(uuid())
+  title         String
+  description   String
+  urgencyLevel  String         @default("medium")
+  status        String         @default("open")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  requestorId   String
+  requestor     User           @relation("Requestor", fields: [requestorId], references: [id])
+  helpers       HelpHelper[]
+}
+
+model HelpHelper {
+  id            String         @id @default(uuid())
+  helpRequestId String
+  userId        String
+  offeredAt     DateTime       @default(now())
+
+  // Relations
+  helpRequest   HelpRequest    @relation(fields: [helpRequestId], references: [id])
+  user          User           @relation(fields: [userId], references: [id])
+
+  @@unique([helpRequestId, userId])
+}
+
+model Team {
+  id            String         @id @default(uuid())
+  name          String         @unique
+  description   String
+  isPublic      Boolean        @default(true)
+  teamImage     String?        @default("default-team.jpg")
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  creatorId     String
+  creator       User           @relation("Creator", fields: [creatorId], references: [id])
+  members       TeamMember[]
+  events        TeamEvent[]
+}
+
+model TeamMember {
+  id            String         @id @default(uuid())
+  teamId        String
+  userId        String
+  joinedAt      DateTime       @default(now())
+
+  // Relations
+  team          Team           @relation(fields: [teamId], references: [id])
+  user          User           @relation(fields: [userId], references: [id])
+
+  @@unique([teamId, userId])
+}
+
+model TeamEvent {
+  id            String         @id @default(uuid())
+  teamId        String
+  eventId       String
+  addedAt       DateTime       @default(now())
+
+  // Relations
+  team          Team           @relation(fields: [teamId], references: [id])
+  event         Event          @relation(fields: [eventId], references: [id])
+
+  @@unique([teamId, eventId])
+}
+
+model VolunteerLog {
+  id            String         @id @default(uuid())
+  hours         Float
+  isVerified    Boolean        @default(false)
+  points        Int            @default(0)
+  notes         String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  // Relations
+  userId        String
+  user          User           @relation(fields: [userId], references: [id])
+  eventId       String
+  event         Event          @relation(fields: [eventId], references: [id])
+  verifiers     VolunteerLogVerifier[]
+
+  User User[] @relation("Verifier")
+}
+
+model VolunteerLogVerifier {
+  id            String         @id @default(uuid())
+  logId         String
+  verifierId    String
+  verifiedAt    DateTime       @default(now())
+
+  // Relations
+  log           VolunteerLog   @relation(fields: [logId], references: [id])
+  verifier      User           @relation("Verifier", fields: [verifierId], references: [id])
+
+  @@unique([logId, verifierId])
+}
