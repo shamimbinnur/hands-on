@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store";
-import { Navigate } from "react-router";
+import { Navigate, NavLink } from "react-router";
 
 const LoginPage: React.FC = () => {
   const [email, setEmail] = useState<string>("");
@@ -90,6 +90,16 @@ const LoginPage: React.FC = () => {
                 </div>
               </div>
             )}
+
+            {/* Register link */}
+            <div className="text-sm">
+              <NavLink
+                to="/register"
+                className="font-medium text-indigo-600 hover:text-indigo-500"
+              >
+                Don't have an account? Register here.
+              </NavLink>
+            </div>
 
             <div>
               <button

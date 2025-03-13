@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useAuthStore } from "../store";
+import { NavLink } from "react-router";
 
 const RegisterPage: React.FC = () => {
   const [name, setName] = useState<string>("");
@@ -135,12 +136,12 @@ const RegisterPage: React.FC = () => {
               </div>
             </div>
             <div className="mt-2 text-center">
-              <a
-                href="/login"
+              <NavLink
+                to="/login"
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 Sign in instead
-              </a>
+              </NavLink>
             </div>
           </div>
         </div>
