@@ -7,10 +7,12 @@ import LoginPage from "./pages/Login.tsx";
 import Home from "./pages/Home.tsx";
 import ProtectedRoutes from "./utils/ProtectedRoutes.tsx";
 import "./index.css";
+import { Navbar } from "./components/common/Navbar.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
