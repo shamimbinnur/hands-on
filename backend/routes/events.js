@@ -8,6 +8,7 @@ const {
   deleteEvent,
   joinEvent,
   leaveEvent,
+  checkJoinStatus,
 } = require("../controllers/eventController");
 const { protect } = require("../middleware/auth");
 
@@ -21,5 +22,6 @@ router
 
 router.post("/:id/join", protect, joinEvent);
 router.post("/:id/leave", protect, leaveEvent);
+router.get("/:id/joined", protect, checkJoinStatus);
 
 module.exports = router;

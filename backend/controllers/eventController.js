@@ -362,6 +362,30 @@ const leaveEvent = async (req, res) => {
   }
 };
 
+// @desc    Check if a user has joined an event
+// @route   GET /api/events/:id/joined
+// @access  Private
+const checkJoinStatus = async (req, res) => {
+  try {
+    // Find the event attendance record
+    const attendance = await prisma.eventAttendee.findFirst({
+      where: {
+        eventId: req.params.id,
+        userId: req.user.id,
+      },
+    });
+
+    // Return true if the user has joined, false otherwise
+    res.json({
+      joined: !!attendance,
+      // Include attendance details if found
+      attendance: attendance || null,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getEvents,
   getEvent,
@@ -370,4 +394,5 @@ module.exports = {
   deleteEvent,
   joinEvent,
   leaveEvent,
+  checkJoinStatus,
 };
