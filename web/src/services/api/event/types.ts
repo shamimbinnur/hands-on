@@ -38,3 +38,13 @@ export interface EventFilters {
   category?: string;
   status?: string;
 }
+
+export interface JoinStatusResponse {
+  joined: boolean;
+  attendance: {
+    id: string;
+    userId: string;
+    eventId: string;
+    createdAt: string;
+  } | null;
+}

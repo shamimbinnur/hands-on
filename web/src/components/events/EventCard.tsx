@@ -15,24 +15,26 @@ export const EventCard: React.FC<EventCardProps> = ({ event, ref }) => {
       ref={ref}
       className="border overflow-hidden border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col h-full"
     >
-      <div className="relative bg-gray-100 h-48">
-        {event.image ? (
-          <img
-            src={event.image}
-            alt={event.title}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full flex justify-center items-center bg-gray-50">
-            <Image size={65} className="text-gray-300" />
+      <NavLink to={`/event/${event.id}`}>
+        <div className="relative bg-gray-100 h-48">
+          {event.image ? (
+            <img
+              src={event.image}
+              alt={event.title}
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <div className="w-full h-full flex justify-center items-center bg-gray-50">
+              <Image size={65} className="text-gray-300" />
+            </div>
+          )}
+          <div className="absolute top-4 right-4">
+            <span className="bg-blue-500 text-white text-sm px-3 py-1 rounded-full">
+              {event.category}
+            </span>
           </div>
-        )}
-        <div className="absolute top-4 right-4">
-          <span className="bg-blue-500 text-white text-sm px-3 py-1 rounded-full">
-            {event.category}
-          </span>
         </div>
-      </div>
+      </NavLink>
 
       <div className="p-5 flex flex-col flex-grow">
         <div className="mb-4">
@@ -63,12 +65,6 @@ export const EventCard: React.FC<EventCardProps> = ({ event, ref }) => {
               <Users size={16} className="text-blue-500" />
               <p>{event.attendeeCount} attendees</p>
             </div>
-          </div>
-
-          <div className="mt-4 flex justify-between items-center">
-            <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-300">
-              Join Event
-            </button>
           </div>
         </div>
       </div>

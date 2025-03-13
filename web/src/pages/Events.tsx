@@ -151,7 +151,7 @@ const Events: React.FC = () => {
 
       {/* Loading indicator */}
       {loading && (
-        <div className="flex justify-center my-8">
+        <div className="flex justify-center my-60">
           <LoadingSpinner />
         </div>
       )}

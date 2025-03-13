@@ -1,23 +1,32 @@
 import { useEffect, useState } from "react";
-import { Calendar, MapPin, Users, ChevronLeft, User, Tag } from "lucide-react";
+import { Calendar, MapPin, ChevronLeft, User, Tag } from "lucide-react";
 import { formatJoinedDate } from "../utils/formatDate";
-import { fetchEventById } from "../services/api/event/eventService";
+import {
+  checkJoinStatus,
+  fetchEventById,
+} from "../services/api/event/eventService";
 import { Event } from "../services/api/event/types";
 import { useParams } from "react-router";
 import { StatusBadge } from "../components/EventDetails/StatusBadge";
 import Loader from "../components/common/Loader";
 import { NavLink } from "react-router";
+import JoinEvent from "../components/events/JoinEvent";
 
 const EventDetailsPage = () => {
   const [event, setEvent] = useState<Event>();
+  const [isJoined, setIsJoined] = useState(false);
   const { id } = useParams();
 
   const load = async () => {
     try {
       const event = await fetchEventById(id as string);
+      const isJoined = await checkJoinStatus(event.id);
+
       setEvent(event);
+      setIsJoined(isJoined.joined);
 
       console.log(event);
+      console.log(isJoined);
     } catch (error) {
       console.error("Error fetching event:", error);
     }
@@ -101,34 +110,6 @@ const EventDetailsPage = () => {
                 <p>{event.description}</p>
               </div>
             </div>
-
-            {/* Attendees */}
-            {event.attendees.length > 0 && (
-              <div className="border-t pt-8 mb-8">
-                <h2 className="text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <Users className="h-5 w-5 mr-2 text-gray-600" />
-                  Attendees
-                  <span className="ml-2 text-gray-500 text-base font-normal">
-                    ({event.attendeeCount})
-                  </span>
-                </h2>
-                <div className="flex -space-x-2 overflow-hidden">
-                  {event.attendees.slice(0, 5).map((attendee, index) => (
-                    <div
-                      key={index}
-                      className="h-10 w-10 rounded-full bg-gray-200 ring-2 ring-white flex items-center justify-center text-gray-600"
-                    >
-                      {attendee.charAt(0).toUpperCase()}
-                    </div>
-                  ))}
-                  {event.attendees.length > 5 && (
-                    <div className="inline-flex items-center justify-center h-10 w-10 rounded-full bg-gray-100 ring-2 ring-white text-gray-600 text-sm font-medium">
-                      +{event.attendees.length - 5}
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Right column - Additional info */}
@@ -164,9 +145,11 @@ const EventDetailsPage = () => {
 
             {/* CTA Button */}
             <div className="mt-8">
-              <button className="w-full px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
-                Join Now
-              </button>
+              <JoinEvent
+                onAttendanceChange={setIsJoined}
+                isAttending={isJoined}
+                eventId={event.id}
+              />
             </div>
           </div>
         </div>
