@@ -4,73 +4,44 @@ const generateToken = require("../utils/generateToken");
 // @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
-const getEvents = async (req, res) => {
+const register = async (req, res) => {
   try {
-    const { category, status, page = 1, limit = 10 } = req.query;
+    const { name, email, password } = req.body;
 
-    // Convert page and limit to numbers
-    const pageNum = parseInt(page);
-    const limitNum = parseInt(limit);
-
-    // Calculate pagination values
-    const skip = (pageNum - 1) * limitNum;
-
-    // Filter options
-    const where = {};
-    if (category) where.category = category;
-    if (status) where.status = status;
-
-    // Get paginated events
-    const events = await prisma.event.findMany({
-      where,
-      include: {
-        organizer: {
-          select: {
-            id: true,
-            name: true,
-            profileImage: true,
-          },
-        },
-        attendees: {
-          select: {
-            userId: true,
-          },
-        },
-      },
-      orderBy: {
-        date: "asc",
-      },
-      skip,
-      take: limitNum,
+    // Check if user exists
+    const userExists = await prisma.user.findUnique({
+      where: { email },
     });
 
-    // Get total count for pagination metadata
-    const totalEvents = await prisma.event.count({
-      where,
-    });
+    if (userExists) {
+      return res.status(400).json({ message: "User already exists" });
+    }
 
-    // Calculate pagination metadata
-    const totalPages = Math.ceil(totalEvents / limitNum);
+    // Hash password
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
 
-    // Format response
-    const formattedEvents = events.map((event) => ({
-      ...event,
-      attendeeCount: event.attendees.length,
-      attendees: event.attendees.map((a) => a.userId),
-    }));
-
-    // Return with pagination metadata
-    res.json({
-      events: formattedEvents,
-      pagination: {
-        total: totalEvents,
-        page: pageNum,
-        limit: limitNum,
-        totalPages,
-        hasNext: pageNum < totalPages,
-        hasPrev: pageNum > 1,
+    // Create user
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        skills: [],
+        causes: [],
       },
     });
+
+    if (user) {
+      res.status(201).json({
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        token: generateToken(user.id),
+      });
+    } else {
+      res.status(400).json({ message: "Invalid user data" });
+    }
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

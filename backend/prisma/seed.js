@@ -120,6 +120,101 @@ async function main() {
         organizerId: samId,
       },
     }),
+    // Additional 6 events
+    prisma.event.create({
+      data: {
+        title: "Homeless Shelter Meal Service",
+        description:
+          "Help prepare and serve meals at the downtown homeless shelter.",
+        category: "community",
+        date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000), // 5 days from now
+        time: "4:00 PM - 7:00 PM",
+        address: "567 Hope St, Downtown, CA",
+        latitude: 37.7831,
+        longitude: -122.4039,
+        maxAttendees: 15,
+        imageUrl: "meal-service.jpg",
+        organizerId: users[3].id, // Taylor
+      },
+    }),
+    prisma.event.create({
+      data: {
+        title: "Senior Center Tech Help",
+        description:
+          "Assist seniors with their smartphones, tablets, and computers.",
+        category: "education",
+        date: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+        time: "2:00 PM - 4:00 PM",
+        address: "789 Elder Ave, Sunshine, CA",
+        latitude: 37.3541,
+        longitude: -121.9552,
+        maxAttendees: 10,
+        imageUrl: "senior-tech.jpg",
+        organizerId: samId,
+      },
+    }),
+    prisma.event.create({
+      data: {
+        title: "City Park Restoration",
+        description:
+          "Help restore our city park with new plants and cleanup efforts.",
+        category: "environment",
+        date: new Date(Date.now() + 21 * 24 * 60 * 60 * 1000), // 3 weeks from now
+        time: "9:00 AM - 1:00 PM",
+        address: "123 Park Lane, Greenville, CA",
+        latitude: 37.4419,
+        longitude: -122.143,
+        maxAttendees: 40,
+        imageUrl: "park-restoration.jpg",
+        organizerId: morganId,
+      },
+    }),
+    prisma.event.create({
+      data: {
+        title: "Animal Shelter Dog Walking",
+        description:
+          "Volunteer to walk and socialize dogs at the local animal shelter.",
+        category: "animal welfare",
+        date: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000), // 4 days from now
+        time: "10:00 AM - 12:00 PM",
+        address: "456 Paws Lane, Barking, CA",
+        latitude: 37.8044,
+        longitude: -122.2711,
+        maxAttendees: 25,
+        imageUrl: "dog-walking.jpg",
+        organizerId: morganId,
+      },
+    }),
+    prisma.event.create({
+      data: {
+        title: "Youth Mentorship Program",
+        description: "Be a mentor for at-risk youth in our community.",
+        category: "education",
+        date: new Date(Date.now() + 8 * 24 * 60 * 60 * 1000), // 8 days from now
+        time: "3:30 PM - 5:30 PM",
+        address: "789 Youth Center Rd, Hope City, CA",
+        latitude: 37.6819,
+        longitude: -122.4269,
+        maxAttendees: 15,
+        imageUrl: "youth-mentorship.jpg",
+        organizerId: alexId,
+      },
+    }),
+    prisma.event.create({
+      data: {
+        title: "Community Blood Drive",
+        description: "Donate blood and help save lives in our community.",
+        category: "health",
+        date: new Date(Date.now() + 12 * 24 * 60 * 60 * 1000), // 12 days from now
+        time: "9:00 AM - 4:00 PM",
+        address: "123 Medical Center Dr, Wellness, CA",
+        latitude: 37.5629,
+        longitude: -122.3255,
+        maxAttendees: 100,
+        imageUrl: "blood-drive.jpg",
+        organizerId: users[4].id, // Jordan
+      },
+    }),
   ]);
 
   console.log(`Created ${events.length} events`);
