@@ -1,5 +1,5 @@
 import axios from "axios";
-import { EventsResponse } from "./types";
+import { EventsResponse, Event } from "./types";
 const API_URL = "http://localhost:5858";
 
 export interface FetchEventsParams {
