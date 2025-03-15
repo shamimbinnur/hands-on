@@ -1,5 +1,10 @@
 import axios from "axios";
-import { EventsResponse, Event, JoinStatusResponse } from "./types";
+import {
+  EventsResponse,
+  Event,
+  JoinStatusResponse,
+  CreateEventData,
+} from "./types";
 
 const API_URL = "http://localhost:5858";
 
@@ -7,6 +12,42 @@ export interface FetchEventsParams {
   page?: number;
   limit?: number;
 }
+
+export const createEvent = async (
+  eventData: CreateEventData,
+  token: string
+): Promise<Event> => {
+  try {
+    const response = await axios.post<Event>(
+      `${API_URL}/api/events`,
+      {
+        title: eventData.title,
+        description: eventData.description,
+        category: eventData.category,
+        date: eventData.date,
+        time: eventData.time,
+        address: eventData.address,
+        latitude: eventData.latitude || null,
+        longitude: eventData.longitude || null,
+        maxAttendees: eventData.maxAttendees || 0,
+        imageUrl: eventData.imageUrl || "default-event.jpg",
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(
+        error.response?.data?.message || "Failed to create event"
+      );
+    }
+    throw new Error("An unexpected error occurred");
+  }
+};
 
 export const fetchEvents = async (
   params: FetchEventsParams = {}

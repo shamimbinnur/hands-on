@@ -1,4 +1,17 @@
 // Types
+
+export interface CreateEventData {
+  title: string;
+  description: string;
+  category: string;
+  date: string;
+  time: string;
+  address: string;
+  latitude?: number | null;
+  longitude?: number | null;
+  maxAttendees?: number;
+  imageUrl?: string;
+}
 export interface Organizer {
   id: string;
   name: string;
@@ -17,7 +30,8 @@ export interface Event {
   organizer: Organizer;
   attendeeCount: number;
   attendees: string[];
-  // Add any other event properties here
+  latitude: 37.7749;
+  longitude: -122.4194;
 }
 
 export interface PaginationMetadata {
