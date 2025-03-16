@@ -3,13 +3,21 @@
 // @access  Public
 const getEvents = async (req, res) => {
   try {
-    const { category, status } = req.query;
+    const { category, status, page = 1, limit = 10 } = req.query;
+
+    // Convert page and limit to numbers
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+
+    // Calculate pagination values
+    const skip = (pageNum - 1) * limitNum;
 
     // Filter options
     const where = {};
     if (category) where.category = category;
     if (status) where.status = status;
 
+    // Get paginated events
     const events = await prisma.event.findMany({
       where,
       include: {
@@ -27,9 +35,19 @@ const getEvents = async (req, res) => {
         },
       },
       orderBy: {
-        date: "asc",
+        createdAt: "desc",
       },
+      skip,
+      take: limitNum,
     });
+
+    // Get total count for pagination metadata
+    const totalEvents = await prisma.event.count({
+      where,
+    });
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalEvents / limitNum);
 
     // Format response
     const formattedEvents = events.map((event) => ({
@@ -38,7 +56,18 @@ const getEvents = async (req, res) => {
       attendees: event.attendees.map((a) => a.userId),
     }));
 
-    res.json(formattedEvents);
+    // Return with pagination metadata
+    res.json({
+      events: formattedEvents,
+      pagination: {
+        total: totalEvents,
+        page: pageNum,
+        limit: limitNum,
+        totalPages,
+        hasNext: pageNum < totalPages,
+        hasPrev: pageNum > 1,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -333,6 +362,30 @@ const leaveEvent = async (req, res) => {
   }
 };
 
+// @desc    Check if a user has joined an event
+// @route   GET /api/events/:id/joined
+// @access  Private
+const checkJoinStatus = async (req, res) => {
+  try {
+    // Find the event attendance record
+    const attendance = await prisma.eventAttendee.findFirst({
+      where: {
+        eventId: req.params.id,
+        userId: req.user.id,
+      },
+    });
+
+    // Return true if the user has joined, false otherwise
+    res.json({
+      joined: !!attendance,
+      // Include attendance details if found
+      attendance: attendance || null,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   getEvents,
   getEvent,
@@ -341,4 +394,5 @@ module.exports = {
   deleteEvent,
   joinEvent,
   leaveEvent,
+  checkJoinStatus,
 };
