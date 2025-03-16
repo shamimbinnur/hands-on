@@ -35,7 +35,7 @@ const getEvents = async (req, res) => {
         },
       },
       orderBy: {
-        date: "asc",
+        createdAt: "desc",
       },
       skip,
       take: limitNum,
