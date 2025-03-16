@@ -11,11 +11,15 @@ import { StatusBadge } from "../components/EventDetails/StatusBadge";
 import Loader from "../components/common/Loader";
 import { NavLink } from "react-router";
 import JoinEvent from "../components/events/JoinEvent";
+import { useAuthStore } from "../store";
+import DeleteEventButton from "../components/EventDetails/DeleteEventButton";
 
 const EventDetailsPage = () => {
   const [event, setEvent] = useState<Event>();
   const [isJoined, setIsJoined] = useState(false);
   const { id } = useParams();
+
+  const { user } = useAuthStore();
 
   const load = async () => {
     try {
@@ -34,7 +38,7 @@ const EventDetailsPage = () => {
 
   useEffect(() => {
     load();
-  }, []);
+  }, [id]);
 
   if (!event) {
     return <Loader />;
@@ -144,12 +148,19 @@ const EventDetailsPage = () => {
             </div>
 
             {/* CTA Button */}
-            <div className="mt-8">
+            <div className="mt-8 flex gap-2">
               <JoinEvent
                 onAttendanceChange={setIsJoined}
                 isAttending={isJoined}
                 eventId={event.id}
               />
+
+              {event.organizer.id === user?.id && (
+                <DeleteEventButton
+                  eventId={event.id}
+                  eventTitle={event.title}
+                />
+              )}
             </div>
           </div>
         </div>

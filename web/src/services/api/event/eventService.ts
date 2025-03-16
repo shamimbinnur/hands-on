@@ -1,4 +1,5 @@
 import axios from "axios";
+import Cookies from "js-cookie";
 import {
   EventsResponse,
   Event,
@@ -14,8 +15,7 @@ export interface FetchEventsParams {
 }
 
 export const createEvent = async (
-  eventData: CreateEventData,
-  token: string
+  eventData: CreateEventData
 ): Promise<Event> => {
   try {
     const response = await axios.post<Event>(
@@ -34,7 +34,7 @@ export const createEvent = async (
       },
       {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${Cookies.get("token")}`,
         },
       }
     );
@@ -128,6 +128,28 @@ export const checkJoinStatus = async (
       throw new Error(
         error.response?.data?.message || "Failed to check join status"
       );
+    }
+    throw new Error("An unexpected error occurred");
+  }
+};
+
+export const deleteEvent = async (id: string): Promise<{ message: string }> => {
+  try {
+    const response = await axios.delete<{ message: string }>(
+      `${API_URL}/api/events/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${Cookies.get("token")}`,
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // Handle specific error cases from the backend
+      const errorMsg =
+        error.response?.data?.message || "Failed to delete event";
+      throw new Error(errorMsg);
     }
     throw new Error("An unexpected error occurred");
   }
