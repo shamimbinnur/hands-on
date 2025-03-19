@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { XCircle } from "lucide-react";
 import { format } from "date-fns";
 import { createEvent } from "../../services/api/event/eventService";
-import { Navigate } from "react-router";
 
 // TypeScript interfaces
 export interface CreateEventData {
