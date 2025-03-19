@@ -7,7 +7,7 @@ import {
   CreateEventData,
 } from "./types";
 
-const API_URL = "http://localhost:5858";
+const API_URL = import.meta.env.API_URL || "http://localhost:5858/api";
 
 export interface FetchEventsParams {
   page?: number;
@@ -19,7 +19,7 @@ export const createEvent = async (
 ): Promise<Event> => {
   try {
     const response = await axios.post<Event>(
-      `${API_URL}/api/events`,
+      `${API_URL}/events`,
       {
         title: eventData.title,
         description: eventData.description,
@@ -54,7 +54,7 @@ export const fetchEvents = async (
 ): Promise<EventsResponse> => {
   try {
     const { page = 1, limit = 10, ...filters } = params;
-    const response = await axios.get(`${API_URL}/api/events`, {
+    const response = await axios.get(`${API_URL}/events`, {
       params: {
         page,
         limit,
@@ -74,7 +74,7 @@ export const fetchEvents = async (
 
 export const fetchEventById = async (id: string): Promise<Event> => {
   try {
-    const response = await axios.get<Event>(`${API_URL}/api/events/${id}`);
+    const response = await axios.get<Event>(`${API_URL}/events/${id}`);
     return response.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -87,7 +87,7 @@ export const fetchEventById = async (id: string): Promise<Event> => {
 export const joinEvent = async (id: string): Promise<{ message: string }> => {
   try {
     const response = await axios.post<{ message: string }>(
-      `${API_URL}/api/events/${id}/join`
+      `${API_URL}/events/${id}/join`
     );
     return response.data;
   } catch (error) {
@@ -103,7 +103,7 @@ export const joinEvent = async (id: string): Promise<{ message: string }> => {
 export const leaveEvent = async (id: string): Promise<{ message: string }> => {
   try {
     const response = await axios.post<{ message: string }>(
-      `${API_URL}/api/events/${id}/leave`
+      `${API_URL}/events/${id}/leave`
     );
     return response.data;
   } catch (error) {
@@ -120,7 +120,7 @@ export const checkJoinStatus = async (
 ): Promise<JoinStatusResponse> => {
   try {
     const response = await axios.get<JoinStatusResponse>(
-      `${API_URL}/api/events/${id}/joined`
+      `${API_URL}/events/${id}/joined`
     );
     return response.data;
   } catch (error) {
@@ -136,7 +136,7 @@ export const checkJoinStatus = async (
 export const deleteEvent = async (id: string): Promise<{ message: string }> => {
   try {
     const response = await axios.delete<{ message: string }>(
-      `${API_URL}/api/events/${id}`,
+      `${API_URL}/events/${id}`,
       {
         headers: {
           Authorization: `Bearer ${Cookies.get("token")}`,

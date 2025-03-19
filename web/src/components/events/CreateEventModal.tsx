@@ -11,8 +11,6 @@ export interface CreateEventData {
   date: string;
   time: string;
   address: string;
-  latitude?: number;
-  longitude?: number;
   maxAttendees?: number;
   imageUrl?: string;
 }
@@ -35,8 +33,6 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
     date: format(new Date(), "yyyy-MM-dd"),
     time: format(new Date(), "HH:mm"),
     address: "",
-    latitude: undefined,
-    longitude: undefined,
     maxAttendees: 0,
     imageUrl: "default-event.jpg",
   });
@@ -232,44 +228,6 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({
                 onChange={handleChange}
                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
               />
-            </div>
-
-            {/* Coordinates */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label
-                  htmlFor="latitude"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Latitude
-                </label>
-                <input
-                  id="latitude"
-                  name="latitude"
-                  type="number"
-                  step="any"
-                  value={formData.latitude ?? ""}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
-                />
-              </div>
-              <div>
-                <label
-                  htmlFor="longitude"
-                  className="block text-sm font-medium text-gray-700"
-                >
-                  Longitude
-                </label>
-                <input
-                  id="longitude"
-                  name="longitude"
-                  type="number"
-                  step="any"
-                  value={formData.longitude ?? ""}
-                  onChange={handleChange}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2 border"
-                />
-              </div>
             </div>
 
             {/* Max Attendees */}

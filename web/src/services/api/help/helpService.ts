@@ -10,8 +10,8 @@ import {
 } from "./types";
 
 // API Endpoints
-const API_URL = "http://localhost:5858";
-const HELP_REQUESTS_ENDPOINT = `${API_URL}/api/help-requests`;
+const API_URL = import.meta.env.API_URL || "http://localhost:5858/api";
+const HELP_REQUESTS_ENDPOINT = `${API_URL}/help-requests`;
 
 // New function to support pagination
 export const fetchHelpRequests = async (

@@ -1,5 +1,3 @@
-// Add these to your types.ts file
-
 export interface PaginationOptions {
   page?: number;
   limit?: number;
