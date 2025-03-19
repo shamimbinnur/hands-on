@@ -1,15 +1,23 @@
-// @desc    Get all help requests
-// @route   GET /api/help-requests
-// @access  Public
+// @desc Get all help requests
+// @route GET /api/help-requests
+// @access Public
 const getHelpRequests = async (req, res) => {
   try {
-    const { urgencyLevel, status } = req.query;
+    const { urgencyLevel, status, page = 1, limit = 10 } = req.query;
+
+    // Convert page and limit to numbers
+    const pageNum = parseInt(page);
+    const limitNum = parseInt(limit);
+
+    // Calculate pagination values
+    const skip = (pageNum - 1) * limitNum;
 
     // Filter options
     const where = {};
     if (urgencyLevel) where.urgencyLevel = urgencyLevel;
     if (status) where.status = status;
 
+    // Get paginated help requests
     const helpRequests = await prisma.helpRequest.findMany({
       where,
       include: {
@@ -35,7 +43,17 @@ const getHelpRequests = async (req, res) => {
       orderBy: {
         createdAt: "desc",
       },
+      skip,
+      take: limitNum,
     });
+
+    // Get total count for pagination metadata
+    const totalHelpRequests = await prisma.helpRequest.count({
+      where,
+    });
+
+    // Calculate pagination metadata
+    const totalPages = Math.ceil(totalHelpRequests / limitNum);
 
     // Format response
     const formattedRequests = helpRequests.map((request) => ({
@@ -44,7 +62,18 @@ const getHelpRequests = async (req, res) => {
       helpers: request.helpers.map((h) => h.user),
     }));
 
-    res.json(formattedRequests);
+    // Return with pagination metadata
+    res.json({
+      helpRequests: formattedRequests,
+      pagination: {
+        total: totalHelpRequests,
+        page: pageNum,
+        limit: limitNum,
+        totalPages,
+        hasNext: pageNum < totalPages,
+        hasPrev: pageNum > 1,
+      },
+    });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
