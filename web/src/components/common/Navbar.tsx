@@ -1,6 +1,7 @@
 import { NavLink } from "react-router";
 import { useAuthStore } from "../../store";
-import { Calendar, Home, LogIn, LogOut, User } from "lucide-react";
+import { Calendar, Heart, LogIn, LogOut } from "lucide-react";
+import Avatar from "./Avatar";
 
 export const Navbar = () => {
   const { user, logout } = useAuthStore();
@@ -22,9 +23,9 @@ export const Navbar = () => {
 
           {/* Center Navigation Links */}
           <div className="flex items-center space-x-4">
-            <NavLink to="/concerts" className={getLinkClass} title="Concerts">
-              <Home size={20} />
-              <span className="hidden sm:inline">Concerts</span>
+            <NavLink to="/help" className={getLinkClass} title="Help">
+              <Heart size={20} />
+              <span className="hidden sm:inline">Help</span>
             </NavLink>
 
             <NavLink to="/event" className={getLinkClass} title="Events">
@@ -42,7 +43,7 @@ export const Navbar = () => {
                   className={getLinkClass}
                   title="Your Profile"
                 >
-                  <User size={20} />
+                  <Avatar name={user.name} size="sm" />
                   <span className="hidden sm:inline">{user.name}</span>
                 </NavLink>
 
