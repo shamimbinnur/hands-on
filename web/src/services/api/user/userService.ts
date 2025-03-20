@@ -1,8 +1,7 @@
-// File: src/services/api/userService.ts
 import { User, UpdateUserData, VolunteerLog } from "./types";
 import Cookies from "js-cookie";
 
-const API_BASE_URL = "http://localhost:5858/api";
+const API_BASE_URL = import.meta.env.API_URL || "http://localhost:5858/api";
 
 export const fetchUserById = async (userId: string): Promise<User> => {
   const response = await fetch(`${API_BASE_URL}/users/${userId}`, {

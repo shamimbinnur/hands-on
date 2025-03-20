@@ -1,5 +1,3 @@
-// Types
-
 export interface CreateEventData {
   title: string;
   description: string;

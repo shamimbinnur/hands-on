@@ -1,9 +1,8 @@
 import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
-import { BrowserRouter, Route, Routes } from "react-router";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router";
 import "./index.css";
 
-import Home from "./pages/Home.tsx";
 import Profile from "./pages/Profile.tsx";
 
 import Register from "./pages/Register.tsx";
@@ -23,7 +22,7 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Navigate to="help" />} />
 
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<LoginPage />} />
