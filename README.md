@@ -1,67 +1,37 @@
-# Project Setup Instructions
+# VolunteerHub - Community Volunteer Platform
 
-## Backend Setup
+VolunteerHub is a comprehensive platform designed to connect volunteers with community service opportunities. It enables users to create and join volunteer events, form teams, request assistance, and track volunteer hours. The platform facilitates community building by allowing users to showcase their skills and causes they care about.
 
-1. Navigate to the backend directory:
+## Key Features
 
-   ```
-   cd backend
-   ```
+- **User Profiles**: Customizable profiles highlighting skills, interests, and volunteer history
+- **Event Management**: Create, join, and manage volunteer events
+- **Team Collaboration**: Form and join teams for coordinated volunteer efforts
+- **Help Request System**: Request and offer assistance for community initiatives
+- **Volunteer Tracking**: Log and track volunteer hours and contributions
 
-2. Create your environment file:
+## Tech Stack
 
-   ```
-   cp .env.example .env
-   ```
+### Backend
 
-3. Configure your environment variables in the `.env` file
+- **Express.js**: Fast, unopinionated web framework for Node.js
+- **JSON Web Tokens (JWT)**: Secure authentication and authorization
+- **Prisma ORM**: Type-safe database access and schema management
+- **NeonDB**: Serverless Postgres database with instant scaling
 
-4. Install dependencies:
+### Frontend
 
-   ```
-   npm install
-   ```
+- **React**: Component-based UI library for building interactive interfaces
+- **Vite**: Next-generation frontend build tool for faster development
+- **Tailwind CSS**: Utility-first CSS framework for rapid UI development
+- **Zustand**: Lightweight state management solution
 
-5. Init database schema:
+This full-stack JavaScript application emphasizes modern development practices, type safety, and a seamless user experience. The combination of Prisma with NeonDB provides a robust, scalable database solution, while React with Zustand creates a responsive and maintainable frontend.
 
-   ```
-   npx prisma db push
-   ```
+## Database Schema
 
-6. Seed the database:
+![Databse schema](/backend/database_schema.png "Database schema of the project")
 
-   ```
-   npx prisma seed
-   ```
+## Run on local machine
 
-7. Start the development server:
-   ```
-   npm run dev
-   ```
-
-## Frontend Setup
-
-1. Navigate to the web directory:
-
-   ```
-   cd web
-   ```
-
-2. Create your environment file:
-
-   ```
-   cp .env.example .env
-   ```
-
-3. Configure your environment variables in the `.env` file
-
-4. Install dependencies:
-
-   ```
-   npm install
-   ```
-
-5. Start the development server:
-   ```
-   npm run dev
-   ```
+To run this project on your local machine follow [this instruction](/project-setup.md)
